@@ -24,5 +24,6 @@ func main() {
 	http.HandleFunc("/getEvents", hello)
 	http.HandleFunc("/addEvent", hello)
 	http.HandleFunc("/deleteEvent", hello)
+
 	http.ListenAndServe(":8888", nil)
 }
