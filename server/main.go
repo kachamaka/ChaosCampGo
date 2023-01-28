@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"net/http"
+
+	database "github.com/kachamaka/chaosgo/db"
 )
 
 func hello(w http.ResponseWriter, req *http.Request) {
@@ -19,6 +21,8 @@ func headers(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
+	database.GetInstance().Connect()
+
 	http.HandleFunc("/login", headers)
 	http.HandleFunc("/register", headers)
 	http.HandleFunc("/getEvents", hello)
