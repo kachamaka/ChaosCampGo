@@ -22,6 +22,7 @@ type RegisterResponse struct {
 }
 
 func (req *RegisterRequest) HashPassword() {
+
 	hashed, err := argon2.GenerateFromPassword(req.Password)
 	if err != nil {
 		log.Fatal("error hashing password")
