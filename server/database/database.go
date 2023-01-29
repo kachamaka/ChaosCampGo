@@ -16,7 +16,7 @@ type Database struct {
 
 var conn *Database
 
-func GetInstance() *Database {
+func Get() *Database {
 	if conn == nil {
 		// Create the connection
 		conn = &Database{
@@ -26,23 +26,39 @@ func GetInstance() *Database {
 	return conn
 }
 
-func (d *Database) Connect() {
-	d.db = connect()
+func (db *Database) GetCollection(col string) *mongo.Collection {
+	return db.db.Collection(col)
 }
 
-func connect() *mongo.Database {
+func (db *Database) Connect() {
+	session, err := connect()
+	if err != nil {
+		log.Fatal("Error connecting to DB")
+		return
+	}
+
+	db.db = session
+}
+
+func (db *Database) Disconnect() {
+	db.db.Client().Disconnect(context.TODO())
+}
+
+func connect() (*mongo.Database, error) {
 	clientOptions := options.Client().ApplyURI(uri)
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
 		log.Fatal(err)
+		return nil, err
 	}
 
 	//comment?
 	err = client.Ping(context.TODO(), nil)
 	if err != nil {
 		log.Fatal(err)
+		return nil, err
 	}
 
-	db := client.Database("chaosgo")
-	return db
+	session := client.Database("chaosgo")
+	return session, nil
 }
