@@ -8,7 +8,11 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const uri = "mongodb://localhost:27017"
+const URI = "mongodb://localhost:27017"
+
+// users collection in database
+const USERS_COLLECTION = "users"
+const EVENTS_COLLECTION = "events"
 
 type Database struct {
 	db *mongo.Database
@@ -26,8 +30,8 @@ func Get() *Database {
 	return conn
 }
 
-func (db *Database) GetCollection(col string) *mongo.Collection {
-	return db.db.Collection(col)
+func (db *Database) GetCollection(collection string) *mongo.Collection {
+	return db.db.Collection(collection)
 }
 
 func (db *Database) Connect() {
@@ -45,7 +49,7 @@ func (db *Database) Disconnect() {
 }
 
 func connect() (*mongo.Database, error) {
-	clientOptions := options.Client().ApplyURI(uri)
+	clientOptions := options.Client().ApplyURI(URI)
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
 		log.Fatal(err)
