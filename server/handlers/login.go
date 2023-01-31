@@ -31,12 +31,12 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := tokens.GenerateToken(ID.Hex())
+	token, err := tokens.GenerateToken(ID)
 	if err != nil {
 		encoder.Encode(models.BasicResponse{Success: false, Message: "couldn't generate token"})
 		log.Println("err with generating the token")
 		return
 	}
 
-	encoder.Encode(models.AuthResponse{Token: token, BasicResponse: models.BasicResponse{Success: true, Message: "all good"}})
+	encoder.Encode(models.AuthResponse{Token: token, BasicResponse: models.BasicResponse{Success: true, Message: "login successful"}})
 }

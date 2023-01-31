@@ -12,7 +12,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func AddEventHandler(w http.ResponseWriter, r *http.Request) {
+func DeleteEventHandler(w http.ResponseWriter, r *http.Request) {
 	encoder := json.NewEncoder(w)
 	encoder.SetIndent("", "\t")
 
@@ -35,24 +35,17 @@ func AddEventHandler(w http.ResponseWriter, r *http.Request) {
 
 	events := database.Get().GetCollection(database.EVENTS_COLLECTION)
 	filter := bson.M{"_id": ID}
-	update := bson.M{"$push": bson.M{"events": event}}
+	update := bson.M{"$pull": bson.M{"events": event}}
 	result := events.FindOneAndUpdate(context.TODO(), filter, update)
 	if result.Err() == mongo.ErrNoDocuments {
-		userEvents := models.UserEvents{
-			ID:     ID,
-			Events: []models.Event{event},
-		}
-		_, err := events.InsertOne(context.TODO(), userEvents)
-		if err != nil {
-			encoder.Encode(models.BasicResponse{Success: false, Message: "error adding user events to database"})
-			log.Println("error with adding user events to database: ", err)
-			return
-		}
+		encoder.Encode(models.BasicResponse{Success: true, Message: "no events to delete"})
+		log.Println("no events to delete")
+		return
 	} else if result.Err() != nil {
 		encoder.Encode(models.BasicResponse{Success: false, Message: result.Err().Error()})
-		log.Println("error with adding event: ", result.Err().Error())
+		log.Println("error with deleting event: ", result.Err().Error())
 		return
 	}
 
-	encoder.Encode(models.BasicResponse{Success: true, Message: "event added successfully"})
+	encoder.Encode(models.BasicResponse{Success: true, Message: "event deleted successfully"})
 }

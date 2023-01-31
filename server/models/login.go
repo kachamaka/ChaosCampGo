@@ -15,7 +15,7 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
-func (loginReq *LoginRequest) MatchPassword() (bson.ObjectId, error) {
+func (loginReq *LoginRequest) MatchPassword() (string, error) {
 	users := database.Get().GetCollection(database.USERS_COLLECTION)
 
 	var user User
