@@ -9,7 +9,8 @@ import (
 )
 
 type Event struct {
-	UserID string `json:"userID" bson:"userID`
+	UserID  string `json:"userID" bson:"userID"`
+	Subject string `json:"subject" bson:"subject"`
 }
 
 func getUsers(w http.ResponseWriter, r *http.Request) {
