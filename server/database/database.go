@@ -14,6 +14,8 @@ const URI = "mongodb://localhost:27017"
 const USERS_COLLECTION = "users"
 const EVENTS_COLLECTION = "events"
 
+const DATABASE = "chaosgo"
+
 type Database struct {
 	db *mongo.Database
 }
@@ -63,6 +65,6 @@ func connect() (*mongo.Database, error) {
 		return nil, err
 	}
 
-	session := client.Database("chaosgo")
+	session := client.Database(DATABASE)
 	return session, nil
 }

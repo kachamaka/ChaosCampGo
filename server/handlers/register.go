@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -10,46 +9,7 @@ import (
 	"github.com/kachamaka/chaosgo/database"
 	"github.com/kachamaka/chaosgo/models"
 	"github.com/kachamaka/chaosgo/tokens"
-	"go.mongodb.org/mongo-driver/mongo"
-	"golang.org/x/crypto/bcrypt"
-	"gopkg.in/mgo.v2/bson"
 )
-
-type RegisterRequest struct {
-	Username string `json:"username" bson:"username"`
-	Password string `json:"password" bson:"password"`
-	Email    string `json:"email" bson:"email"`
-}
-
-func (registerReq *RegisterRequest) HashPassword() error {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(registerReq.Password), 14)
-	if err != nil {
-		return err
-	}
-	registerReq.Password = string(bytes)
-	return nil
-}
-
-func (registerReq *RegisterRequest) UsernameExists(username string) (bool, error) {
-	users := database.Get().GetCollection(database.USERS_COLLECTION)
-
-	var user models.User
-	filter := bson.M{"username": username}
-	result := users.FindOne(context.TODO(), filter)
-	if result.Err() == mongo.ErrNoDocuments {
-		return false, nil
-	}
-	err := result.Decode(&user)
-	if err != nil {
-		return false, err
-	}
-
-	if user != (models.User{}) {
-		return true, nil
-	}
-
-	return false, nil
-}
 
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	// if method POST
@@ -59,7 +19,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	encoder := json.NewEncoder(w)
 	encoder.SetIndent("", "\t")
 
-	var req RegisterRequest
+	var req models.RegisterRequest
 
 	if err := decoder.Decode(&req); err != nil {
 		encoder.Encode(models.BasicResponse{Success: false, Message: "err by decoding"})
@@ -75,7 +35,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if usernameExists {
 		encoder.Encode(models.BasicResponse{Success: false, Message: "user already exists"})
-		log.Println("error user exists: ", err)
+		log.Println("error user exists")
 		return
 	}
 
