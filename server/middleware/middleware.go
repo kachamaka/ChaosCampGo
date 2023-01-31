@@ -10,7 +10,7 @@ import (
 	"github.com/kachamaka/chaosgo/tokens"
 )
 
-func Auth(next func(http.ResponseWriter, *http.Request)) http.HandlerFunc {
+func Auth(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		encoder := json.NewEncoder(w)
 		encoder.SetIndent("", "\t")
@@ -31,7 +31,6 @@ func Auth(next func(http.ResponseWriter, *http.Request)) http.HandlerFunc {
 			return
 		}
 
-		// context.Set(r, "_id", v)
 		ctx := context.WithValue(r.Context(), "_id", id)
 		r = r.WithContext(ctx)
 		next(w, r)

@@ -19,4 +19,5 @@ func main() {
 	http.HandleFunc("/getEvents", middleware.Auth(handlers.GetEventsHandler))
 
 	http.ListenAndServe(":8888", nil)
+	// http.ListenAndServe(":8888", middleware.CORS(r))
 }
