@@ -8,16 +8,19 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const URI = "mongodb://localhost:27017"
+// const HTTP_ADDRESS = "0.0.0.0:8888"
+// const URI = "mongodb://localhost:27017"
 
-// users collection in database
+// collections in database
 const USERS_COLLECTION = "users"
 const EVENTS_COLLECTION = "events"
+const REMINDERS_COLLECTION = "reminders"
 
 const DATABASE = "chaosgo"
 
 type Database struct {
-	db *mongo.Database
+	Config Config
+	db     *mongo.Database
 }
 
 var conn *Database
@@ -25,8 +28,13 @@ var conn *Database
 func Get() *Database {
 	if conn == nil {
 		// Create the connection
+		config, err := LoadConfig(".")
+		if err != nil {
+			log.Fatalf("error with config, %v", err)
+		}
+
 		conn = &Database{
-			// Connection details
+			Config: *config,
 		}
 	}
 	return conn
@@ -51,7 +59,7 @@ func (db *Database) Disconnect() {
 }
 
 func connect() (*mongo.Database, error) {
-	clientOptions := options.Client().ApplyURI(URI)
+	clientOptions := options.Client().ApplyURI(conn.Config.DatabaseAddress)
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
 		log.Fatal(err)

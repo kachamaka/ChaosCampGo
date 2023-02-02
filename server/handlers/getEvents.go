@@ -26,7 +26,7 @@ func GetEventsHandler(w http.ResponseWriter, r *http.Request) {
 	var eventsResponse models.EventsResponse
 
 	events := database.Get().GetCollection(database.EVENTS_COLLECTION)
-	filter := bson.M{"_id": ID}
+	filter := bson.M{"user_id": ID}
 	result := events.FindOne(context.TODO(), filter)
 	if result.Err() == mongo.ErrNoDocuments {
 		encoder.Encode(models.BasicResponse{Success: false, Message: "no events for this user"})

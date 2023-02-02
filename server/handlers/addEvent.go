@@ -34,12 +34,12 @@ func AddEventHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	events := database.Get().GetCollection(database.EVENTS_COLLECTION)
-	filter := bson.M{"_id": ID}
+	filter := bson.M{"user_id": ID}
 	update := bson.M{"$push": bson.M{"events": event}}
 	result := events.FindOneAndUpdate(context.TODO(), filter, update)
 	if result.Err() == mongo.ErrNoDocuments {
 		userEvents := models.UserEvents{
-			ID:     ID,
+			UserID: ID,
 			Events: []models.Event{event},
 		}
 		_, err := events.InsertOne(context.TODO(), userEvents)

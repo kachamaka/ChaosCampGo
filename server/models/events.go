@@ -19,7 +19,7 @@ type Event struct {
 }
 
 type UserEvents struct {
-	ID     string  `bson:"_id"`
+	UserID string  `bson:"user_id"`
 	Events []Event `bson:"events"`
 }
 
