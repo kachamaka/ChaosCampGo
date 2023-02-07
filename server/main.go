@@ -6,7 +6,6 @@ import (
 	"github.com/kachamaka/chaosgo/database"
 	"github.com/kachamaka/chaosgo/handlers"
 	"github.com/kachamaka/chaosgo/middleware"
-	"github.com/kachamaka/chaosgo/models"
 )
 
 func main() {
@@ -14,7 +13,7 @@ func main() {
 	defer database.Get().Disconnect()
 
 	//send reminders
-	go models.SendReminders()
+	go database.SendReminders()
 
 	// reminder := models.Reminder{
 	// 	UserID:    "63d8cdd577f897d88c753fbf",
@@ -35,6 +34,8 @@ func main() {
 	http.HandleFunc("/deleteEvent", middleware.Auth(handlers.DeleteEventHandler))
 	http.HandleFunc("/getEvents", middleware.Auth(handlers.GetEventsHandler))
 	http.HandleFunc("/addReminder", middleware.Auth(handlers.AddReminderHandler))
+	// http.HandleFunc("/deleteReminder", middleware.Auth(handlers.DeleteReminderHandler))
+	// http.HandleFunc("/deleteReminder", handlers.DeleteReminderHandler)
 
 	http.ListenAndServe(database.Get().Config.ServerAddress, nil)
 	// http.ListenAndServe(":8888", middleware.CORS(r))

@@ -2,14 +2,13 @@ package database
 
 import (
 	"context"
+	"fmt"
 	"log"
 
+	"github.com/kachamaka/chaosgo/models"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
-
-// const HTTP_ADDRESS = "0.0.0.0:8888"
-// const URI = "mongodb://localhost:27017"
 
 // collections in database
 const USERS_COLLECTION = "users"
@@ -18,12 +17,42 @@ const REMINDERS_COLLECTION = "reminders"
 
 const DATABASE = "chaosgo"
 
+type DatabaseSchema interface {
+	Connect()
+	Disconnect()
+
+	Login(models.LoginRequest) (string, error)
+	Register(models.RegisterRequest) (string, error)
+	UsernameExists(string) (bool, error)
+
+	AddEvent(string, models.Event) error
+	GetEvents(string, *models.EventsResponse) error
+	DeleteEvent(string, models.Event) error
+
+	AddReminder(models.Reminder) error
+}
+
 type Database struct {
 	Config Config
 	db     *mongo.Database
 }
 
+// AddReminder implements Schema
+func (db *Database) AddReminder(reminder models.Reminder) error {
+	reminders := db.GetCollection(REMINDERS_COLLECTION)
+	_, err := reminders.InsertOne(context.TODO(), reminder)
+	if err != nil {
+		log.Println("err adding reminder: ", err)
+		//CUSTOM ERRORS
+		return fmt.Errorf("error adding reminder")
+	}
+
+	return nil
+}
+
 var conn *Database
+
+var _ DatabaseSchema = (*Database)(nil)
 
 func Get() *Database {
 	if conn == nil {
