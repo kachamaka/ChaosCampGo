@@ -19,21 +19,21 @@ func AddReminderHandler(w http.ResponseWriter, r *http.Request) {
 	stringID, objectID, err := database.GetHeaders(r)
 	if err != nil {
 		encoder.Encode(models.BasicResponse{Success: false, Message: err.Error()})
-		log.Println("err getting headers: ", err)
+		log.Println("error by get headers: ", err)
 		return
 	}
 
 	var req models.ReminderRequest
 	if err := decoder.Decode(&req); err != nil {
 		encoder.Encode(models.BasicResponse{Success: false, Message: "can't read body"})
-		log.Println("err by decoding body: ", err)
+		log.Println("error by decode body: ", err)
 		return
 	}
 
 	user, err := database.GetUser(objectID)
 	if err != nil {
 		encoder.Encode(models.BasicResponse{Success: false, Message: err.Error()})
-		log.Println("err getting user: ", err)
+		log.Println("err by get user: ", err)
 		return
 	}
 
@@ -48,7 +48,7 @@ func AddReminderHandler(w http.ResponseWriter, r *http.Request) {
 	err = database.Get().AddReminder(reminder)
 	if err != nil {
 		encoder.Encode(models.BasicResponse{Success: false, Message: err.Error()})
-		log.Println("err adding reminder: ", err)
+		log.Println("err by add reminder: ", err)
 		return
 	}
 

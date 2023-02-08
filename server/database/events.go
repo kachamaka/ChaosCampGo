@@ -10,7 +10,6 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// AddEvent implements Schema
 func (db *Database) AddEvent(ID string, event models.Event) error {
 	events := db.GetCollection(EVENTS_COLLECTION)
 	filter := bson.M{"user_id": ID}
@@ -25,7 +24,6 @@ func (db *Database) AddEvent(ID string, event models.Event) error {
 		_, err := events.InsertOne(context.TODO(), userEvents)
 		if err != nil {
 			log.Println("error with adding user events to database: ", err)
-			//ADD CUSTOM ERRORS
 			return fmt.Errorf("error adding user events to database")
 		}
 	} else if result.Err() != nil {
@@ -36,7 +34,6 @@ func (db *Database) AddEvent(ID string, event models.Event) error {
 	return nil
 }
 
-// AddReminder implements Schema
 func (db *Database) GetEvents(ID string, eventsResponse *models.EventsResponse) error {
 	events := db.GetCollection(EVENTS_COLLECTION)
 	filter := bson.M{"user_id": ID}

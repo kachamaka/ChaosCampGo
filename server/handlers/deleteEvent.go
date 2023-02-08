@@ -19,21 +19,21 @@ func DeleteEventHandler(w http.ResponseWriter, r *http.Request) {
 	stringID, err := database.GetHeader(r)
 	if err != nil {
 		encoder.Encode(models.BasicResponse{Success: false, Message: "id from auth header not string"})
-		log.Println("err by getting id from auth header")
+		log.Println("error by get header")
 		return
 	}
 
 	var event models.Event
 	if err := decoder.Decode(&event); err != nil {
 		encoder.Encode(models.BasicResponse{Success: false, Message: "can't read body"})
-		log.Println("err by decoding body: ", err)
+		log.Println("error by decode body: ", err)
 		return
 	}
 
 	err = database.Get().DeleteEvent(stringID, event)
 	if err != nil {
 		encoder.Encode(models.BasicResponse{Success: false, Message: err.Error()})
-		log.Println("err deleting event: ", err)
+		log.Println("error deleting event: ", err)
 		return
 	}
 

@@ -15,8 +15,6 @@ func main() {
 	//send reminders
 	go database.SendReminders()
 
-	//MAKE SENDING WITH MAILGUN
-
 	// reminder := models.Reminder{
 	// 	UserID:    "63d8cdd577f897d88c753fbf",
 	// 	Email:     "martin.popov42@gmail.com",

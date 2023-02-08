@@ -21,21 +21,21 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	var request models.RegisterRequest
 	if err := decoder.Decode(&request); err != nil {
 		encoder.Encode(models.BasicResponse{Success: false, Message: "err by decoding"})
-		log.Println("err by decoding body: ", err)
+		log.Println("error by decode body: ", err)
 		return
 	}
 
 	ID, err := database.Get().Register(request)
 	if err != nil {
 		encoder.Encode(models.BasicResponse{Success: false, Message: err.Error()})
-		log.Println("err registering user: ", err)
+		log.Println("error by register: ", err)
 		return
 	}
 
 	token, err := tokens.GenerateToken(ID)
 	if err != nil {
 		encoder.Encode(models.BasicResponse{Success: false, Message: "couldn't generate token"})
-		log.Println("error with generating token: ", err)
+		log.Println("error by generate token: ", err)
 		return
 	}
 

@@ -20,21 +20,21 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var request models.LoginRequest
 	if err := decoder.Decode(&request); err != nil {
 		encoder.Encode(models.BasicResponse{Success: false, Message: "can't read body"})
-		log.Println("err by decoding body: ", err)
+		log.Println("error by decode body: ", err)
 		return
 	}
 
 	ID, err := database.Get().Login(request)
 	if err != nil {
 		encoder.Encode(models.BasicResponse{Success: false, Message: err.Error()})
-		log.Println("err with login", err)
+		log.Println("error by login", err)
 		return
 	}
 
 	token, err := tokens.GenerateToken(ID)
 	if err != nil {
 		encoder.Encode(models.BasicResponse{Success: false, Message: "couldn't generate token"})
-		log.Println("err with generating the token", err)
+		log.Println("error by generate token", err)
 		return
 	}
 

@@ -40,7 +40,6 @@ type Database struct {
 	db     *mongo.Database
 }
 
-// AddReminder implements Schema
 func (db *Database) AddReminder(reminder models.Reminder) error {
 	reminders := db.GetCollection(REMINDERS_COLLECTION)
 	_, err := reminders.InsertOne(context.TODO(), reminder)

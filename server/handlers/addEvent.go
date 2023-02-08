@@ -19,21 +19,21 @@ func AddEventHandler(w http.ResponseWriter, r *http.Request) {
 	stringID, err := database.GetHeader(r)
 	if err != nil {
 		encoder.Encode(models.BasicResponse{Success: false, Message: err.Error()})
-		log.Println("err by getting id from auth header", err)
+		log.Println("error by get header", err)
 		return
 	}
 
 	var event models.Event
 	if err := decoder.Decode(&event); err != nil {
 		encoder.Encode(models.BasicResponse{Success: false, Message: "can't read body"})
-		log.Println("err by decoding body: ", err)
+		log.Println("error by decode body: ", err)
 		return
 	}
 
 	err = database.Get().AddEvent(stringID, event)
 	if err != nil {
 		encoder.Encode(models.BasicResponse{Success: false, Message: err.Error()})
-		log.Println("err adding event: ", err)
+		log.Println("error by add event: ", err)
 		return
 	}
 
