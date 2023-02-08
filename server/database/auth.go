@@ -59,12 +59,12 @@ func (db *Database) Register(request models.RegisterRequest) (string, error) {
 		return "", fmt.Errorf("error registering user")
 	}
 
-	// ID := fmt.Sprintf("%v", result.InsertedID)
-	ID, ok := result.InsertedID.(string)
-	if !ok {
-		log.Println("error with type asserting InsertedID: ", err)
-		return "", fmt.Errorf("error getting registered user ID")
-	}
+	ID := fmt.Sprintf("%v", result.InsertedID)
+	// ID, ok := result.InsertedID.(string)
+	// if !ok {
+	// 	log.Println("error with type asserting InsertedID: ")
+	// 	return "", fmt.Errorf("error getting registered user ID")
+	// }
 
 	return ID, nil
 }

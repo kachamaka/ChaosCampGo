@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"net/smtp"
 	"time"
 
 	"github.com/kachamaka/chaosgo/models"
+	"github.com/mailgun/mailgun-go/v4"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -20,31 +20,31 @@ func secondsToString(seconds int64) string {
 }
 
 func Send(r models.Reminder) {
-	from := "golangcc42@gmail.com"
-	pass := "gxrrzdnxobuxkdkj"
-	to := r.Email
+	mg := mailgun.NewMailgun(MAILGUN_DOMAIN, MAILGUN_PRIVATE_API_KEY)
+
+	sender := "golangcc42@gmail.com"
+	subject := fmt.Sprintf("Reminder for event: %s", r.Subject)
 	body := fmt.Sprintf("Hello, your event \"%s\" is about to start in %s.", r.Subject, secondsToString(r.StartTime-r.Time))
-	msg := fmt.Sprintf("From: %s\nTo: %s\nSubject: Reminder for event %s\n\n%s", from, to, r.Subject, body)
-	auth := smtp.PlainAuth("", from, pass, "smtp.gmail.com")
+	recipient := r.Email
 
-	difference := r.Time - time.Now().Unix()
-	// fmt.Println("SLEEP FOR:", time.Duration(difference*int64(time.Second)))
-	time.Sleep(time.Duration(difference * int64(time.Second)))
+	message := mg.NewMessage(sender, subject, body, recipient)
 
-	err := smtp.SendMail("smtp.gmail.com:587", auth, from, []string{to}, []byte(msg))
+	message.SetDeliveryTime(time.Unix(r.Time, 0))
+
+	_, _, err := mg.Send(context.TODO(), message)
+
 	if err != nil {
-		log.Printf("smtp error: %s", err)
+		log.Println("mailgun error: ", err)
 		return
 	}
 
-	reminders := Get().GetCollection(REMINDERS_COLLECTION)
-	_, err = reminders.DeleteOne(context.TODO(), r)
+	err = DeleteReminder(r)
 	if err != nil {
 		log.Println("error with deleting reminder after sending: ", err)
 		return
 	}
 
-	log.Print("email sent")
+	log.Println("email sent")
 }
 
 func SendReminders() {
