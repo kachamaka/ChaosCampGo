@@ -5,6 +5,7 @@ import "github.com/spf13/viper"
 type Config struct {
 	ServerAddress   string `mapstructure:"HTTP_ADDRESS"`
 	DatabaseAddress string `mapstructure:"DB_ADDRESS"`
+	DatabaseName    string `mapstructure:"DB_NAME"`
 }
 
 func LoadConfig(path string) (*Config, error) {

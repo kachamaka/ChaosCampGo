@@ -19,6 +19,18 @@ func secondsToString(seconds int64) string {
 	return fmt.Sprintf("%d hour(s), %d minute(s) and %d second(s)", hours, minutes, seconds)
 }
 
+func (db *Database) AddReminder(reminder models.Reminder) error {
+	reminders := db.GetCollection(REMINDERS_COLLECTION)
+	_, err := reminders.InsertOne(context.TODO(), reminder)
+	if err != nil {
+		log.Println("err adding reminder: ", err)
+		//CUSTOM ERRORS
+		return fmt.Errorf("error adding reminder")
+	}
+
+	return nil
+}
+
 func Send(r models.Reminder) {
 	mg := mailgun.NewMailgun(MAILGUN_DOMAIN, MAILGUN_PRIVATE_API_KEY)
 

@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/kachamaka/chaosgo/models"
@@ -17,8 +16,6 @@ const MAILGUN_PRIVATE_API_KEY = "25a33e6191a65ea68c448539651414d1-d1a07e51-7dd42
 const USERS_COLLECTION = "users"
 const EVENTS_COLLECTION = "events"
 const REMINDERS_COLLECTION = "reminders"
-
-const DATABASE = "chaosgo"
 
 type DatabaseSchema interface {
 	Connect()
@@ -38,18 +35,6 @@ type DatabaseSchema interface {
 type Database struct {
 	Config Config
 	db     *mongo.Database
-}
-
-func (db *Database) AddReminder(reminder models.Reminder) error {
-	reminders := db.GetCollection(REMINDERS_COLLECTION)
-	_, err := reminders.InsertOne(context.TODO(), reminder)
-	if err != nil {
-		log.Println("err adding reminder: ", err)
-		//CUSTOM ERRORS
-		return fmt.Errorf("error adding reminder")
-	}
-
-	return nil
 }
 
 var conn *Database
@@ -76,7 +61,7 @@ func (db *Database) GetCollection(collection string) *mongo.Collection {
 }
 
 func (db *Database) Connect() {
-	session, err := connect()
+	session, err := connect(db.Config.DatabaseName)
 	if err != nil {
 		log.Fatal("Error connecting to DB")
 		return
@@ -89,7 +74,7 @@ func (db *Database) Disconnect() {
 	db.db.Client().Disconnect(context.TODO())
 }
 
-func connect() (*mongo.Database, error) {
+func connect(databaseName string) (*mongo.Database, error) {
 	clientOptions := options.Client().ApplyURI(conn.Config.DatabaseAddress)
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
@@ -104,6 +89,6 @@ func connect() (*mongo.Database, error) {
 		return nil, err
 	}
 
-	session := client.Database(DATABASE)
+	session := client.Database(databaseName)
 	return session, nil
 }

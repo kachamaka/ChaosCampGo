@@ -22,8 +22,3 @@ type UserEvents struct {
 	UserID string  `bson:"user_id"`
 	Events []Event `bson:"events"`
 }
-
-type EventsResponse struct {
-	Events []Event `json:"events" bson:"events"`
-	BasicResponse
-}

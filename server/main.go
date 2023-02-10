@@ -9,11 +9,6 @@ import (
 )
 
 func main() {
-	database.Get().Connect()
-	defer database.Get().Disconnect()
-
-	//send reminders
-	go database.SendReminders()
 
 	// reminder := models.Reminder{
 	// 	UserID:    "63d8cdd577f897d88c753fbf",
@@ -31,16 +26,23 @@ func main() {
 	// (https://app.mailgun.com/app/domains)
 
 	// return
+	database.Get().Connect()
+	defer database.Get().Disconnect()
 
-	http.HandleFunc("/login", handlers.LoginHandler)
-	http.HandleFunc("/register", handlers.RegisterHandler)
-	http.HandleFunc("/addEvent", middleware.Auth(handlers.AddEventHandler))
-	http.HandleFunc("/deleteEvent", middleware.Auth(handlers.DeleteEventHandler))
-	http.HandleFunc("/getEvents", middleware.Auth(handlers.GetEventsHandler))
-	http.HandleFunc("/addReminder", middleware.Auth(handlers.AddReminderHandler))
+	//send reminders
+	go database.SendReminders()
+
+	mux := http.NewServeMux()
+
+	mux.HandleFunc("/login", handlers.LoginHandler)
+	mux.HandleFunc("/register", handlers.RegisterHandler)
+	mux.HandleFunc("/addEvent", middleware.Auth(handlers.AddEventHandler))
+	mux.HandleFunc("/deleteEvent", middleware.Auth(handlers.DeleteEventHandler))
+	mux.HandleFunc("/getEvents", middleware.Auth(handlers.GetEventsHandler))
+	mux.HandleFunc("/addReminder", middleware.Auth(handlers.AddReminderHandler))
 	// http.HandleFunc("/deleteReminder", middleware.Auth(handlers.DeleteReminderHandler))
 	// http.HandleFunc("/deleteReminder", handlers.DeleteReminderHandler)
 
-	http.ListenAndServe(database.Get().Config.ServerAddress, nil)
-	// http.ListenAndServe(":8888", middleware.CORS(r))
+	// http.ListenAndServe(database.Get().Config.ServerAddress, nil)
+	http.ListenAndServe(database.Get().Config.ServerAddress, middleware.CORS(mux))
 }

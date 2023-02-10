@@ -1,1 +1,34 @@
-hello
+<!-- <h1>Angular Router App</h1>
+<nav>
+  <ul>
+    <li><a routerLink="/login" routerLinkActive="active" ariaCurrentWhenActive="page">Login</a></li>
+    <li><a routerLink="/register" routerLinkActive="active" ariaCurrentWhenActive="page">Register</a></li>
+  </ul>
+</nav>
+<router-outlet></router-outlet> -->
+
+<mat-sidenav-container
+    class="example-container" (backdropClick)="close('backdrop')">
+  <mat-sidenav [autoFocus]="false" class="sidenav" #sidenav (keydown.escape)="close('escape')" disableClose>
+    <!-- <p><button mat-button (click)="close('toggle button')">Toggle</button></p> -->
+        <div class="logo">Logo</div>
+        <button (click)="close('home')" class="home" mat-flat-button color="primary" routerLink="/home" routerLinkActive="active">Home</button>
+        <button (click)="close('login')" class="login" mat-flat-button color="primary" routerLink="/login" routerLinkActive="active">Login</button>
+        <button (click)="close('register')" class="register" mat-flat-button color="primary" routerLink="/register" routerLinkActive="active">Register</button>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    
+    <div class="container">
+        <div class="nav">
+            <div class="menu"><button (click)="sidenav.open()">Menu</button></div>
+            <div class="header">Header</div>
+        </div>
+        <div class="body">
+            <router-outlet></router-outlet> 
+        </div>
+    </div>
+    <!-- <p><button mat-button (click)="sidenav.open()">Open</button></p>
+    <p>Closed due to: {{reason}}</p> -->
+  </mat-sidenav-content>
+</mat-sidenav-container>

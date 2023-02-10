@@ -2,3 +2,19 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.mat-drawer-inner-container{
+    display: grid;
+    grid-template-rows: 10% 5% 5% 5% auto;
+    grid-template-areas: 
+    "logo"
+    "home"
+    "login"
+    "register"
+    ".";
+}
+
+
+.mat-primary{
+    border-radius: 0px!important;
+}
