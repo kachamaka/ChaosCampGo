@@ -10,7 +10,6 @@ import (
 )
 
 func main() {
-
 	// from := mail.NewEmail("golangcc", "golangcc42@gmail.com")
 	// to := mail.NewEmail("", "martin.popov42@gmail.com")
 	// subject := fmt.Sprintf("Reminder for event: %s", "OK")
