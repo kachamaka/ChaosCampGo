@@ -11,12 +11,19 @@ import (
 	"github.com/kachamaka/chaosgo/tokens"
 )
 
+// LoginHandler is a function that logs in the user
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
+	encoder := json.NewEncoder(w)
+	encoder.SetIndent("", "\t")
+
 	decoder := json.NewDecoder(r.Body)
 	defer r.Body.Close()
 
-	encoder := json.NewEncoder(w)
-	encoder.SetIndent("", "\t")
+	if r.Method != http.MethodPost {
+		encoder.Encode(models.BasicResponse{Success: false, Message: "method not allowed", Status: status.METHOD_ERROR})
+		log.Println("method not allowed")
+		return
+	}
 
 	var request models.LoginRequest
 	if err := decoder.Decode(&request); err != nil {

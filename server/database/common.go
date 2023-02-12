@@ -10,6 +10,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// GetHeader is a function that gets the '_id' property from a header
 func GetHeader(r *http.Request) (string, error) {
 	headerID, ok := r.Context().Value("_id").(string)
 	if !ok {
@@ -18,6 +19,8 @@ func GetHeader(r *http.Request) (string, error) {
 	return headerID, nil
 }
 
+// GetHeaders is a function that gets the '_id' property from a header and also converts it to the
+// primitive.ObjectID type and returns both instances as they are almost always needed
 func GetHeaders(r *http.Request) (string, primitive.ObjectID, error) {
 	stringID, err := GetHeader(r)
 	if err != nil {
@@ -30,6 +33,7 @@ func GetHeaders(r *http.Request) (string, primitive.ObjectID, error) {
 	return stringID, objectID, err
 }
 
+// GetUser is a function that gets a user with specified ID from the database
 func GetUser(ID primitive.ObjectID) (models.User, error) {
 	users := Get().GetCollection(USERS_COLLECTION)
 	filter := bson.M{"_id": ID}

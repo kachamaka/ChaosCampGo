@@ -1,9 +1,11 @@
 package status
 
+// Status codes for backend response
 var (
 	OK                  = 200
 	AUTHORIZATION_ERROR = 401
 	BODY_ERROR          = 400
+	METHOD_ERROR        = 405
 	LOGIN_ERROR         = 1
 	REGISTER_ERROR      = 2
 	TOKEN_ERROR         = 3

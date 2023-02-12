@@ -9,7 +9,7 @@ export class HttpService {
   
   domain = 'http://localhost:8888/';
   isLoggedIn = false;
-  authToken: any;
+  authToken = "";
   options!: HttpHeaders;
 
   constructor(private http: HttpClient) {
@@ -20,7 +20,8 @@ export class HttpService {
   }
 
   loadToken() {
-    this.authToken = localStorage.getItem("token");
+    let token = localStorage.getItem("token");
+    this.authToken = (token == null ? "" : token);
   }  
 
   auth(token: string) {
@@ -36,10 +37,13 @@ export class HttpService {
 
   headers() {
     this.loadToken();
+    console.log("???");
     this.options = new HttpHeaders({
       "Content-Type": "application/json",
       "Authorization": this.authToken
     });
+    console.log("DEBA", this.authToken);
+
     return {headers: this.options};
   }
 

@@ -12,6 +12,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// secondsToString converts seconds that is a unix timestamp to readable text for humans
 func secondsToString(seconds int64) string {
 	hours := seconds / 3600
 	seconds -= hours * 3600
@@ -21,18 +22,19 @@ func secondsToString(seconds int64) string {
 	// return fmt.Sprintf("%d hour(s), %d minute(s) and %d second(s)", hours, minutes, seconds)
 }
 
+// AddReminder is a function that adds a reminder for an event to the database
 func (db *Database) AddReminder(reminder models.Reminder) error {
 	reminders := db.GetCollection(REMINDERS_COLLECTION)
 	_, err := reminders.InsertOne(context.TODO(), reminder)
 	if err != nil {
-		log.Println("err adding reminder: ", err)
-		//CUSTOM ERRORS
+		log.Println("error adding reminder: ", err)
 		return fmt.Errorf("error adding reminder")
 	}
 
 	return nil
 }
 
+// Send is a function that sends a remainder for an event to the email address of the user
 func Send(r models.Reminder) {
 	from := mail.NewEmail("golangcc", "golangcc42@gmail.com")
 	to := mail.NewEmail("", r.Email)
@@ -50,6 +52,7 @@ func Send(r models.Reminder) {
 		return
 	}
 
+	// delete reminder after being sent
 	err = DeleteReminder(r)
 	if err != nil {
 		log.Println("error with deleting reminder after sending: ", err)
@@ -59,6 +62,7 @@ func Send(r models.Reminder) {
 	log.Println("email sent")
 }
 
+// SendReminders is a function that goes through all reminders in the database and tries to send them all
 func SendReminders() {
 	remindersCollection := Get().GetCollection(REMINDERS_COLLECTION)
 	cursor, err := remindersCollection.Find(context.TODO(), bson.M{})
@@ -88,6 +92,7 @@ func SendReminders() {
 	}
 }
 
+// DeleteReminder is a function that deletes a reminder from the database
 func DeleteReminder(reminder models.Reminder) error {
 	reminders := Get().GetCollection(REMINDERS_COLLECTION)
 

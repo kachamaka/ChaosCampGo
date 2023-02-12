@@ -10,9 +10,16 @@ import (
 	"github.com/kachamaka/chaosgo/status"
 )
 
+// GetEventsHandler is a function that fetches all events from the database for the user
 func GetEventsHandler(w http.ResponseWriter, r *http.Request) {
 	encoder := json.NewEncoder(w)
 	encoder.SetIndent("", "\t")
+
+	if r.Method != http.MethodGet {
+		encoder.Encode(models.BasicResponse{Success: false, Message: "method not allowed", Status: status.METHOD_ERROR})
+		log.Println("method not allowed")
+		return
+	}
 
 	stringID, err := database.GetHeader(r)
 	if err != nil {

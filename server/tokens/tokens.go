@@ -13,8 +13,10 @@ import (
 
 const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
+// tokenSecret is the secret used for generating JWTs for the current instance of the running server
 var tokenSecret = generateSecret(32)
 
+// GenerateToken is a function that generates JWT from unique user ID
 func GenerateToken(userID string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"_id": userID,
@@ -29,6 +31,7 @@ func GenerateToken(userID string) (string, error) {
 	return tokenString, nil
 }
 
+// DecryptToken is a function that decrypts JWT and returns JWT claims
 func DecryptToken(tokenString string) (jwt.MapClaims, error) {
 	claims, err := extractClaims(tokenString)
 	if err != nil {
@@ -37,6 +40,7 @@ func DecryptToken(tokenString string) (jwt.MapClaims, error) {
 	return claims, nil
 }
 
+// extractClaims is a function that extracts JWT claims from JWT
 func extractClaims(tokenString string) (jwt.MapClaims, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -58,6 +62,7 @@ func extractClaims(tokenString string) (jwt.MapClaims, error) {
 
 }
 
+// generateSecret is a function that generates random sequence of letters and numbers
 func generateSecret(n int) string {
 	rand.Seed(time.Now().UnixNano())
 

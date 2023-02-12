@@ -11,6 +11,8 @@ import (
 	"github.com/kachamaka/chaosgo/tokens"
 )
 
+// Auth is a function that acts as a middleware for all handlers except login and register
+// and is used to ensure that an authorized user is making requests
 func Auth(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		encoder := json.NewEncoder(w)
@@ -39,6 +41,7 @@ func Auth(next http.HandlerFunc) http.HandlerFunc {
 
 }
 
+// CORS is a function that enables CORS policy for localhost applications
 func CORS(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")

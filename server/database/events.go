@@ -10,6 +10,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// AddEvent is a function that adds an event to the events array of user in the database
 func (db *Database) AddEvent(ID string, event models.Event) error {
 	events := db.GetCollection(EVENTS_COLLECTION)
 	filter := bson.M{"user_id": ID}
@@ -34,6 +35,7 @@ func (db *Database) AddEvent(ID string, event models.Event) error {
 	return nil
 }
 
+// GetEvents is a function that fetches all events for user with ID from the database
 func (db *Database) GetEvents(ID string, eventsResponse *models.EventsResponse) error {
 	events := db.GetCollection(EVENTS_COLLECTION)
 	filter := bson.M{"user_id": ID}
@@ -56,6 +58,7 @@ func (db *Database) GetEvents(ID string, eventsResponse *models.EventsResponse) 
 	return nil
 }
 
+// DeleteEvent is a function that deletes an event from the events array of user in the database
 func (db *Database) DeleteEvent(ID string, event models.Event) error {
 	events := db.GetCollection(EVENTS_COLLECTION)
 	filter := bson.M{"user_id": ID}

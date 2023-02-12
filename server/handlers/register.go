@@ -11,13 +11,19 @@ import (
 	"github.com/kachamaka/chaosgo/tokens"
 )
 
+// RegisterHandler is a function that register a new user to the database
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
-	// if method POST
+	encoder := json.NewEncoder(w)
+	encoder.SetIndent("", "\t")
+
 	decoder := json.NewDecoder(r.Body)
 	defer r.Body.Close()
 
-	encoder := json.NewEncoder(w)
-	encoder.SetIndent("", "\t")
+	if r.Method != http.MethodPost {
+		encoder.Encode(models.BasicResponse{Success: false, Message: "method not allowed", Status: status.METHOD_ERROR})
+		log.Println("method not allowed")
+		return
+	}
 
 	var request models.RegisterRequest
 	if err := decoder.Decode(&request); err != nil {

@@ -10,12 +10,19 @@ import (
 	"github.com/kachamaka/chaosgo/status"
 )
 
+// DeleteEventHandler is a function that deletes an event from the database
 func DeleteEventHandler(w http.ResponseWriter, r *http.Request) {
 	encoder := json.NewEncoder(w)
 	encoder.SetIndent("", "\t")
 
 	decoder := json.NewDecoder(r.Body)
 	defer r.Body.Close()
+
+	if r.Method != http.MethodPost {
+		encoder.Encode(models.BasicResponse{Success: false, Message: "method not allowed", Status: status.METHOD_ERROR})
+		log.Println("method not allowed")
+		return
+	}
 
 	stringID, err := database.GetHeader(r)
 	if err != nil {

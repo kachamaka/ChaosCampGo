@@ -10,12 +10,19 @@ import (
 	"github.com/kachamaka/chaosgo/status"
 )
 
+// AddReminderHandler is a function that adds a reminder for an event to the database
 func AddReminderHandler(w http.ResponseWriter, r *http.Request) {
 	encoder := json.NewEncoder(w)
 	encoder.SetIndent("", "\t")
 
 	decoder := json.NewDecoder(r.Body)
 	defer r.Body.Close()
+
+	if r.Method != http.MethodPost {
+		encoder.Encode(models.BasicResponse{Success: false, Message: "method not allowed", Status: status.METHOD_ERROR})
+		log.Println("method not allowed")
+		return
+	}
 
 	stringID, objectID, err := database.GetHeaders(r)
 	if err != nil {
@@ -52,8 +59,6 @@ func AddReminderHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println("err by add reminder: ", err)
 		return
 	}
-
-	// reminder.Time = time.Now().Add(time.Second * 30).Unix()
 
 	//send reminder
 	// fmt.Println(reminder)

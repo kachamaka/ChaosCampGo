@@ -11,6 +11,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// Login is a function that finds user with username in database and ensures the passwords match
 func (db *Database) Login(request models.LoginRequest) (string, error) {
 	users := db.GetCollection(USERS_COLLECTION)
 
@@ -36,6 +37,8 @@ func (db *Database) Login(request models.LoginRequest) (string, error) {
 	return user.ID, nil
 }
 
+// Register is a function that checks if username is unique, hashes the password and inserts
+// the newly created user instance to the database
 func (db *Database) Register(request models.RegisterRequest) (string, error) {
 	usernameExists, err := db.UsernameExists(request.Username)
 	if err != nil {
@@ -64,6 +67,7 @@ func (db *Database) Register(request models.RegisterRequest) (string, error) {
 	return ID, nil
 }
 
+// UsernameExists is a function that checks if a username is already present in the users collection in the database
 func (db *Database) UsernameExists(username string) (bool, error) {
 	users := db.GetCollection(USERS_COLLECTION)
 

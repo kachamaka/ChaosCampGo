@@ -2,6 +2,7 @@ package database
 
 import "github.com/spf13/viper"
 
+// Config is a struct model that represents the config properties being read from the app.env file
 type Config struct {
 	ServerAddress   string `mapstructure:"HTTP_ADDRESS"`
 	DatabaseAddress string `mapstructure:"DB_ADDRESS"`
@@ -9,6 +10,7 @@ type Config struct {
 	SendgridAPiKey  string `mapstructure:"SENDGRID_API_KEY"`
 }
 
+// LoadConfig is a function that loads the config properties and returns a struct entailing them
 func LoadConfig(path string) (*Config, error) {
 	viper.AddConfigPath(path)
 	viper.SetConfigName("app")
