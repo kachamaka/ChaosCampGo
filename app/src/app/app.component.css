@@ -58,3 +58,8 @@
 .active {
     background-color: #6978CB!important;
 }
+
+.menuButton {
+    margin-left: 1vw;
+    margin-top: 0.5vw;
+}

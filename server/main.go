@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/kachamaka/chaosgo/database"
@@ -9,6 +10,24 @@ import (
 )
 
 func main() {
+
+	// from := mail.NewEmail("golangcc", "golangcc42@gmail.com")
+	// to := mail.NewEmail("", "martin.popov42@gmail.com")
+	// subject := fmt.Sprintf("Reminder for event: %s", "OK")
+	// plainTextContent := "test"
+	// htmlContent := plainTextContent
+	// message := mail.NewSingleEmail(from, subject, to, plainTextContent, htmlContent)
+
+	// message.SendAt = 1676210160
+
+	// client := sendgrid.NewSendClient("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")
+	// _, err := client.Send(message)
+	// if err != nil {
+	// 	log.Println("sendgrid error: ", err)
+	// 	return
+	// }
+
+	// return
 
 	// reminder := models.Reminder{
 	// 	UserID:    "63d8cdd577f897d88c753fbf",
@@ -44,5 +63,6 @@ func main() {
 	// http.HandleFunc("/deleteReminder", handlers.DeleteReminderHandler)
 
 	// http.ListenAndServe(database.Get().Config.ServerAddress, nil)
+	fmt.Println("Running on:", database.Get().Config.ServerAddress)
 	http.ListenAndServe(database.Get().Config.ServerAddress, middleware.CORS(mux))
 }

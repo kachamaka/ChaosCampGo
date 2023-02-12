@@ -18,3 +18,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mat-primary{
     border-radius: 0px!important;
 }
+
+.snack{
+    width: 30%!important;
+}
+
+.selected {
+    background-color: lightgray!important;
+}

@@ -6,6 +6,7 @@ type Config struct {
 	ServerAddress   string `mapstructure:"HTTP_ADDRESS"`
 	DatabaseAddress string `mapstructure:"DB_ADDRESS"`
 	DatabaseName    string `mapstructure:"DB_NAME"`
+	SendgridAPiKey  string `mapstructure:"SENDGRID_API_KEY"`
 }
 
 func LoadConfig(path string) (*Config, error) {

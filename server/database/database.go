@@ -9,9 +9,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const MAILGUN_DOMAIN = "sandbox0cb6f5028356498690e13f4374a8072f.mailgun.org"
-const MAILGUN_PRIVATE_API_KEY = "25a33e6191a65ea68c448539651414d1-d1a07e51-7dd42058"
-
 // collections in database
 const USERS_COLLECTION = "users"
 const EVENTS_COLLECTION = "events"

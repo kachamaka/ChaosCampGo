@@ -1,0 +1,25 @@
+.example-card {
+    max-width: 400px;
+    display: inline-block;
+    margin-right: 7vw;
+    margin-bottom: 5vh;
+  }
+  .card {
+    text-align: center;
+    margin-right: 10vw;
+    display: inline-block;
+    margin-left: 5%;
+    /* margin-top: 15vh; */
+    padding-top: 1%;
+    /* height: 20%; */
+    margin-bottom: 5vh;
+    width: 22rem;
+}
+
+.formField {
+  width: 100%;
+}
+
+.wrapper {
+  display: inline;
+}

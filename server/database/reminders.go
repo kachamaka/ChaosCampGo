@@ -7,7 +7,8 @@ import (
 	"time"
 
 	"github.com/kachamaka/chaosgo/models"
-	"github.com/mailgun/mailgun-go/v4"
+	"github.com/sendgrid/sendgrid-go"
+	"github.com/sendgrid/sendgrid-go/helpers/mail"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -16,7 +17,8 @@ func secondsToString(seconds int64) string {
 	seconds -= hours * 3600
 	minutes := seconds / 60
 	seconds -= minutes * 60
-	return fmt.Sprintf("%d hour(s), %d minute(s) and %d second(s)", hours, minutes, seconds)
+	return fmt.Sprintf("%d hour(s) and %d minute(s)", hours, minutes)
+	// return fmt.Sprintf("%d hour(s), %d minute(s) and %d second(s)", hours, minutes, seconds)
 }
 
 func (db *Database) AddReminder(reminder models.Reminder) error {
@@ -32,21 +34,19 @@ func (db *Database) AddReminder(reminder models.Reminder) error {
 }
 
 func Send(r models.Reminder) {
-	mg := mailgun.NewMailgun(MAILGUN_DOMAIN, MAILGUN_PRIVATE_API_KEY)
-
-	sender := "golangcc42@gmail.com"
+	from := mail.NewEmail("golangcc", "golangcc42@gmail.com")
+	to := mail.NewEmail("", r.Email)
 	subject := fmt.Sprintf("Reminder for event: %s", r.Subject)
-	body := fmt.Sprintf("Hello, your event \"%s\" is about to start in %s.", r.Subject, secondsToString(r.StartTime-r.Time))
-	recipient := r.Email
+	plainTextContent := fmt.Sprintf("Hello, your event \"%s\" is about to start in %s.", r.Subject, secondsToString(r.EventStart-r.Time))
+	htmlContent := plainTextContent
+	message := mail.NewSingleEmail(from, subject, to, plainTextContent, htmlContent)
 
-	message := mg.NewMessage(sender, subject, body, recipient)
+	message.SendAt = int(r.Time)
 
-	message.SetDeliveryTime(time.Unix(r.Time, 0))
-
-	_, _, err := mg.Send(context.TODO(), message)
-
+	client := sendgrid.NewSendClient(Get().Config.SendgridAPiKey)
+	_, err := client.Send(message)
 	if err != nil {
-		log.Println("mailgun error: ", err)
+		log.Println("sendgrid error: ", err)
 		return
 	}
 

@@ -21,7 +21,10 @@
     
     <div class="container">
         <div class="nav">
-            <div class="menu"><button (click)="sidenav.open()">Menu</button></div>
+            <div class="menu">
+              
+        <button class="menuButton" (click)="sidenav.open()" mat-flat-button color="primary"><mat-icon style="text-align: center; margin: 0">menu</mat-icon></button>
+        </div>
             <div class="header">Header</div>
         </div>
         <div class="body">
