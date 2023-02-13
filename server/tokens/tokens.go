@@ -61,8 +61,8 @@ func extractClaims(tokenString string) (jwt.MapClaims, error) {
 
 }
 
-// generateSecret is a function that generates random sequence of letters and numbers
-func generateSecret(n int) string {
+// GenerateSecret is a function that generates random sequence of letters and numbers
+func GenerateSecret(n int) string {
 	rand.Seed(time.Now().UnixNano())
 
 	b := make([]byte, n)

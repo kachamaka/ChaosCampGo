@@ -14,9 +14,6 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-var mockDB *database.Database
-var testConfig *config.Config
-
 func NewMockDatabase() *database.Database {
 	if mockDB == nil {
 		mockDB = &database.Database{}
@@ -31,55 +28,59 @@ func NewMockDatabase() *database.Database {
 	return mockDB
 }
 
-var TEST_ID string = "63ea64ef2e1c7d21f929d50d"
+var (
+	mockDB     *database.Database
+	testConfig *config.Config
+	TEST_ID    string = "63ea64ef2e1c7d21f929d50d"
 
-var TEST_USER = models.User{
-	ID:       "",
-	Username: "user1",
-	Password: "pass",
-	Email:    "test@test.test",
-}
+	TEST_USER = models.User{
+		ID:       "",
+		Username: "user1",
+		Password: "pass",
+		Email:    "test@test.test",
+	}
 
-var TEST_EVENT1 = models.Event{
-	Subject: "Test subject1",
-	Day:     1,
-	Start:   "14:00",
-	End:     "17:00",
-}
-var TEST_EVENT2 = models.Event{
-	Subject: "Test subject2",
-	Day:     3,
-	Start:   "10:00",
-	End:     "12:00",
-}
-var TEST_EVENT3 = models.Event{
-	Subject: "Test subject3",
-	Day:     6,
-	Start:   "8:00",
-	End:     "17:00",
-}
+	TEST_EVENT1 = models.Event{
+		Subject: "Test subject1",
+		Day:     1,
+		Start:   "14:00",
+		End:     "17:00",
+	}
+	TEST_EVENT2 = models.Event{
+		Subject: "Test subject2",
+		Day:     3,
+		Start:   "10:00",
+		End:     "12:00",
+	}
+	TEST_EVENT3 = models.Event{
+		Subject: "Test subject3",
+		Day:     6,
+		Start:   "8:00",
+		End:     "17:00",
+	}
 
-var TEST_REMINDER1 = models.Reminder{
-	UserID:     "",
-	Email:      "",
-	Subject:    TEST_EVENT1.Subject,
-	Time:       time.Now().Add(time.Second).Unix(),
-	EventStart: 0,
-}
-var TEST_REMINDER2 = models.Reminder{
-	UserID:     "",
-	Email:      "",
-	Subject:    TEST_EVENT2.Subject,
-	Time:       time.Now().Add(time.Minute).Unix(),
-	EventStart: 0,
-}
-var TEST_REMINDER3 = models.Reminder{
-	UserID:     "",
-	Email:      "",
-	Subject:    TEST_EVENT3.Subject,
-	Time:       time.Now().Add(-time.Minute).Unix(),
-	EventStart: 0,
-}
+	TEST_REMINDER1 = models.Reminder{
+		UserID:     "",
+		Email:      "",
+		Subject:    TEST_EVENT1.Subject,
+		Time:       time.Now().Add(time.Second).Unix(),
+		EventStart: 0,
+	}
+	TEST_REMINDER2 = models.Reminder{
+		UserID:     "",
+		Email:      "",
+		Subject:    TEST_EVENT2.Subject,
+		Time:       time.Now().Add(time.Minute).Unix(),
+		EventStart: 0,
+	}
+	TEST_REMINDER3 = models.Reminder{
+		UserID:     "",
+		Email:      "",
+		Subject:    TEST_EVENT3.Subject,
+		Time:       time.Now().Add(-time.Minute).Unix(),
+		EventStart: 0,
+	}
+)
 
 func TestGetHeader(t *testing.T) {
 	req, _ := http.NewRequest("", "", nil)
