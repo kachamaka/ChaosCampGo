@@ -1,14 +1,14 @@
 # ChaosCampGo Project
 
-This is a project for the ChaosCamp Golang Course.\
-There is a client side and a server side to it.\
+This is a project for the ChaosCamp Golang Course. \
+There is a client side and a server side to it. \
 
 In order to run the server, you need to enter the server folder and to create an "app.env" file with the following structure:\
-`HTTP_ADDRESS = "..."\
-DB_ADDRESS = "..."\
-DB_NAME = "..."\
-TOKEN_SECRET = "..."\
-SENDGRID_API_KEY = "..."`\
+`HTTP_ADDRESS = "..."`\
+`DB_ADDRESS = "..."`\
+`DB_NAME = "..."`\
+`TOKEN_SECRET = "..."`\
+`SENDGRID_API_KEY = "..."`\
 
 HTTP_ADDRESS - the address on which the server will be running, eg. "0.0.0.0:8888"\
 DB_ADDRESS - the address the database is running on, eg. "mongodb://localhost:27017"\
