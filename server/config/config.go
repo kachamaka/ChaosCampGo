@@ -1,4 +1,4 @@
-package database
+package config
 
 import "github.com/spf13/viper"
 
@@ -7,6 +7,7 @@ type Config struct {
 	ServerAddress   string `mapstructure:"HTTP_ADDRESS"`
 	DatabaseAddress string `mapstructure:"DB_ADDRESS"`
 	DatabaseName    string `mapstructure:"DB_NAME"`
+	TokenSecret     string `mapstructure:"TOKEN_SECRET"`
 	SendgridAPiKey  string `mapstructure:"SENDGRID_API_KEY"`
 }
 

@@ -9,6 +9,7 @@ import (
 	"github.com/kachamaka/chaosgo/models"
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
+	"github.com/spf13/viper"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -35,7 +36,7 @@ func (db *Database) AddReminder(reminder models.Reminder) error {
 }
 
 // Send is a function that sends a remainder for an event to the email address of the user
-func Send(r models.Reminder) {
+func (db *Database) SendReminder(r models.Reminder) error {
 	from := mail.NewEmail("golangcc", "golangcc42@gmail.com")
 	to := mail.NewEmail("", r.Email)
 	subject := fmt.Sprintf("Reminder for event: %s", r.Subject)
@@ -45,26 +46,29 @@ func Send(r models.Reminder) {
 
 	message.SendAt = int(r.Time)
 
-	client := sendgrid.NewSendClient(Get().Config.SendgridAPiKey)
+	sendgridApiKey := viper.GetString("SENDGRID_API_KEY")
+
+	client := sendgrid.NewSendClient(sendgridApiKey)
 	_, err := client.Send(message)
 	if err != nil {
 		log.Println("sendgrid error: ", err)
-		return
+		return err
 	}
 
 	// delete reminder after being sent
-	err = DeleteReminder(r)
+	err = db.DeleteReminder(r)
 	if err != nil {
 		log.Println("error with deleting reminder after sending: ", err)
-		return
+		return err
 	}
 
 	log.Println("email sent")
+	return nil
 }
 
 // SendReminders is a function that goes through all reminders in the database and tries to send them all
-func SendReminders() {
-	remindersCollection := Get().GetCollection(REMINDERS_COLLECTION)
+func (db *Database) SendReminders() {
+	remindersCollection := db.GetCollection(REMINDERS_COLLECTION)
 	cursor, err := remindersCollection.Find(context.TODO(), bson.M{})
 	if err != nil {
 		log.Println("error fetching reminders: ", err)
@@ -81,20 +85,25 @@ func SendReminders() {
 		if reminder.Time < time.Now().Unix() {
 			//reminder already due
 			go func(reminder models.Reminder) {
-				err := DeleteReminder(reminder)
+				err := db.DeleteReminder(reminder)
 				if err != nil {
 					log.Println("error deleting reminder: ", err)
 				}
 			}(reminder)
 		} else {
-			go Send(reminder)
+			go func(reminder models.Reminder) {
+				err := db.SendReminder(reminder)
+				if err != nil {
+					log.Println("error sending reminder: ", err)
+				}
+			}(reminder)
 		}
 	}
 }
 
 // DeleteReminder is a function that deletes a reminder from the database
-func DeleteReminder(reminder models.Reminder) error {
-	reminders := Get().GetCollection(REMINDERS_COLLECTION)
+func (db *Database) DeleteReminder(reminder models.Reminder) error {
+	reminders := db.GetCollection(REMINDERS_COLLECTION)
 
 	_, err := reminders.DeleteOne(context.TODO(), reminder)
 	if err != nil {

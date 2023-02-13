@@ -190,6 +190,8 @@ export class ScheduleComponent {
     if(res["status"] == 401 || res["status"] == 3) {
       this.httpService.logout();
       this.router.navigate(['/login']);
+    } else {
+      this.httpService.isLoggedIn = true
     }
   }
 

@@ -7,22 +7,21 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
+	"github.com/spf13/viper"
 )
 
 // const lifeTime = 12 * time.Hour
 
 const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
-// tokenSecret is the secret used for generating JWTs for the current instance of the running server
-var tokenSecret = generateSecret(32)
-
 // GenerateToken is a function that generates JWT from unique user ID
 func GenerateToken(userID string) (string, error) {
+	log.Println(viper.GetString("TOKEN_SECRET"))
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"_id": userID,
 	})
 
-	tokenString, err := token.SignedString([]byte(tokenSecret))
+	tokenString, err := token.SignedString([]byte(viper.GetString("TOKEN_SECRET")))
 	if err != nil {
 		log.Fatal("Couldn't sign token", err.Error())
 		return "", err
@@ -47,7 +46,7 @@ func extractClaims(tokenString string) (jwt.MapClaims, error) {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 
-		return []byte(tokenSecret), nil
+		return []byte(viper.GetString("TOKEN_SECRET")), nil
 	})
 
 	if err != nil {

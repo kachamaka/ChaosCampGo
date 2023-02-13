@@ -37,12 +37,10 @@ export class HttpService {
 
   headers() {
     this.loadToken();
-    console.log("???");
     this.options = new HttpHeaders({
       "Content-Type": "application/json",
       "Authorization": this.authToken
     });
-    console.log("DEBA", this.authToken);
 
     return {headers: this.options};
   }

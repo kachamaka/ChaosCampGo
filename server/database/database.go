@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/kachamaka/chaosgo/models"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -16,24 +17,29 @@ const REMINDERS_COLLECTION = "reminders"
 
 // DatabaseSchema is an interface model for the functionality that the database supports
 type DatabaseSchema interface {
-	Connect()
+	connect(string, string) (*mongo.Database, error)
+	Connect(string, string)
 	Disconnect()
 
 	Login(models.LoginRequest) (string, error)
 	Register(models.RegisterRequest) (string, error)
 	UsernameExists(string) (bool, error)
+	GetUserByID(ID primitive.ObjectID) (models.User, error)
+	GetUser(username string) (models.User, error)
 
 	AddEvent(string, models.Event) error
 	GetEvents(string, *models.EventsResponse) error
 	DeleteEvent(string, models.Event) error
 
 	AddReminder(models.Reminder) error
+	DeleteReminder(reminder models.Reminder) error
+	SendReminder(r models.Reminder) error
+	SendReminders()
 }
 
 // Database is a struct model for the database
 type Database struct {
-	Config Config
-	db     *mongo.Database
+	db *mongo.Database
 }
 
 // conn is a Database instance
@@ -46,16 +52,8 @@ var _ DatabaseSchema = (*Database)(nil)
 // instance of the database or creates it if such does not exist
 func Get() *Database {
 	if conn == nil {
-		// Load config properties
-		config, err := LoadConfig(".")
-		if err != nil {
-			log.Fatalf("error with config, %v", err)
-		}
-
 		// Create the connection
-		conn = &Database{
-			Config: *config,
-		}
+		conn = &Database{}
 	}
 	return conn
 }
@@ -66,8 +64,8 @@ func (db *Database) GetCollection(collection string) *mongo.Collection {
 }
 
 // Connect is a function that establishes a connection with the database
-func (db *Database) Connect() {
-	session, err := connect(db.Config.DatabaseName)
+func (db *Database) Connect(databaseAddress string, databaseName string) {
+	session, err := db.connect(databaseAddress, databaseName)
 	if err != nil {
 		log.Fatal("Error connecting to DB:", err)
 		return
@@ -82,19 +80,15 @@ func (db *Database) Disconnect() {
 }
 
 // connect is a function that connects with the database, attemps to ping it and returns the session
-func connect(databaseName string) (*mongo.Database, error) {
-	clientOptions := options.Client().ApplyURI(conn.Config.DatabaseAddress)
+func (db *Database) connect(databaseAddress string, databaseName string) (*mongo.Database, error) {
+	clientOptions := options.Client().ApplyURI(databaseAddress)
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
 		log.Println("err connecting to db:", err)
 		return nil, err
 	}
-
-	//comment?
-	err = client.Ping(context.TODO(), nil)
-	if err != nil {
-		log.Println("err pinging db:", err)
-		return nil, err
+	if client == nil {
+		return nil, nil
 	}
 
 	session := client.Database(databaseName)

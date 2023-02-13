@@ -42,9 +42,12 @@
     width: 20%;
 }
 
-
 .logo {
     grid-area: logo;
+}
+
+.home {
+    grid-area: home;
 }
 
 .login {
@@ -53,6 +56,10 @@
 
 .register {
     grid-area: register;
+}
+
+.logout {
+    grid-area: logout;
 }
 
 .active {

@@ -11,15 +11,15 @@ import (
 )
 
 // AddEvent is a function that adds an event to the events array of user in the database
-func (db *Database) AddEvent(ID string, event models.Event) error {
+func (db *Database) AddEvent(userID string, event models.Event) error {
 	events := db.GetCollection(EVENTS_COLLECTION)
-	filter := bson.M{"user_id": ID}
+	filter := bson.M{"user_id": userID}
 	update := bson.M{"$push": bson.M{"events": event}}
 
 	result := events.FindOneAndUpdate(context.TODO(), filter, update)
 	if result.Err() == mongo.ErrNoDocuments {
 		userEvents := models.UserEvents{
-			UserID: ID,
+			UserID: userID,
 			Events: []models.Event{event},
 		}
 		_, err := events.InsertOne(context.TODO(), userEvents)

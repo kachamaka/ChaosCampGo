@@ -6,22 +6,12 @@ import (
 	"log"
 
 	"github.com/kachamaka/chaosgo/models"
-	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/crypto/bcrypt"
-	"gopkg.in/mgo.v2/bson"
 )
 
-// Login is a function that finds user with username in database and ensures the passwords match
+// Login is a function that finds user with username in database and ensures the passwords match, returns token string and error
 func (db *Database) Login(request models.LoginRequest) (string, error) {
-	users := db.GetCollection(USERS_COLLECTION)
-
-	var user models.User
-	filter := bson.M{"username": request.Username}
-	result := users.FindOne(context.TODO(), filter)
-	if result.Err() == mongo.ErrNoDocuments {
-		return "", fmt.Errorf("no users in collection")
-	}
-	err := result.Decode(&user)
+	user, err := db.GetUser(request.Username)
 	if err != nil {
 		return "", err
 	}
@@ -31,14 +21,14 @@ func (db *Database) Login(request models.LoginRequest) (string, error) {
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(request.Password))
 	if err != nil {
-		return "", fmt.Errorf("error comparing password and hash")
+		return "", fmt.Errorf("error comparing password and hash: %v", err)
 	}
 
 	return user.ID, nil
 }
 
 // Register is a function that checks if username is unique, hashes the password and inserts
-// the newly created user instance to the database
+// the newly created user instance to the database, returns token string and error
 func (db *Database) Register(request models.RegisterRequest) (string, error) {
 	usernameExists, err := db.UsernameExists(request.Username)
 	if err != nil {
@@ -69,15 +59,7 @@ func (db *Database) Register(request models.RegisterRequest) (string, error) {
 
 // UsernameExists is a function that checks if a username is already present in the users collection in the database
 func (db *Database) UsernameExists(username string) (bool, error) {
-	users := db.GetCollection(USERS_COLLECTION)
-
-	var user models.User
-	filter := bson.M{"username": username}
-	result := users.FindOne(context.TODO(), filter)
-	if result.Err() == mongo.ErrNoDocuments {
-		return false, nil
-	}
-	err := result.Decode(&user)
+	user, err := db.GetUser(username)
 	if err != nil {
 		return false, err
 	}
