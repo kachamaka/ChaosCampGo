@@ -107,8 +107,13 @@ export class ScheduleComponent {
   removeEvent() {
     if(this.selectedEvent) {
       this.httpService.removeEvent(this.selectedEvent).subscribe(res => {
-        this.selectedEvent = undefined!;
-        this.getEvents();
+        if(res["success"]) {
+          this.selectedEvent = <Event>{};
+          this.getEvents();
+          this.msg(res["message"]);
+        } else {
+          this.msg(res["message"]);
+        }
       });
     }
     else {
