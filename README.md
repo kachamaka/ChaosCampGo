@@ -28,4 +28,4 @@ In order to run the database tests, create a folder "test" and a file "app.env" 
 `DB_NAME = "mockgocc"`\
 `SENDGRID_API_KEY = "..."` <br/>
 
-The tests run will only affect the database specified by this configuration. <br/>
+The tests run will only affect the database specified by the test configuration. <br/>
