@@ -12,6 +12,7 @@ export class RegisterComponent {
 
   username: string = "";
   password: string = "";
+  email: string = "";
 
   constructor(
     private httpService: HttpService, 
@@ -27,7 +28,8 @@ export class RegisterComponent {
   onRegister() {
     let user = {
       "username": this.username,
-      "password": this.password
+      "password": this.password,
+      "email": this.email
     };
     this.httpService.register(user)
     .subscribe((res => {
