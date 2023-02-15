@@ -29,3 +29,8 @@ In order to run the database tests, create a folder "test" and a file "app.env" 
 `SENDGRID_API_KEY = "..."` <br/>
 
 The tests run will only affect the database specified by the test configuration. <br/>
+
+##
+
+In order to run the client, you need to first have AngularCLI installed. Then enter the app folder and run `npm install` to download all packages and dependencies.\
+Finally you need to run `ng s --o` and it will open a new tab in your browser where the application will be served.
