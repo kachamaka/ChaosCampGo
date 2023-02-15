@@ -153,8 +153,12 @@ export class ScheduleComponent {
   }
 
   selectEvent(event: Event) {
-    this.selectedEvent = event;
-    console.log(event);
+    if(this.selectedEvent == event) {
+      this.selectedEvent = <Event>{}
+    } else {
+      this.selectedEvent = event;
+      console.log(event);
+    }
     // let startTime = this.getTime(event.start, event.day);
     // let timeAhead = 3600;
     // console.log(startTime - timeAhead);
@@ -192,7 +196,7 @@ export class ScheduleComponent {
   }
 
   validateToken(res: any) {
-    if(res["status"] == 401 || res["status"] == 3) {
+    if(res["status"] == 401 || res["status"] == 3 || res["status"] != 200) {
       this.httpService.logout();
       this.router.navigate(['/login']);
     } else {

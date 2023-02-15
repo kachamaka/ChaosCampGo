@@ -1,6 +1,6 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs';
+import { catchError, map, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -46,33 +46,68 @@ export class HttpService {
   }
 
   register(user: any) {
-    // return this.http.post(this.domain + '/register', user).subscribe
     return this.http.post(this.domain + "register", user)
-    .pipe(map(response => JSON.parse(JSON.stringify(response))));
+    .pipe(
+      map(response => JSON.parse(JSON.stringify(response))),
+      catchError(error => {
+        console.log(error);
+        return of(<Response>{success: false, message: "Server error"});
+    }));
   }
 
   login(user: any) {
     return this.http.post(this.domain + "login", user)
-    .pipe(map(response => JSON.parse(JSON.stringify(response))));
+    .pipe(
+      map(response => JSON.parse(JSON.stringify(response))),
+      catchError(error => {
+        console.log(error);
+        return of(<Response>{success: false, message: "Server error"});
+    }));
   }
 
   getEvents() {
     return this.http.get(this.domain + "getEvents", this.headers())
-    .pipe(map(response => JSON.parse(JSON.stringify(response))));
+    .pipe(
+      map(response => JSON.parse(JSON.stringify(response))),
+      catchError(error => {
+        console.log(error);
+        return of(<Response>{success: false, message: "Server error"});
+    }));
   }
 
   addEvent(event: any) {
     return this.http.post(this.domain + "addEvent", event, this.headers())
-    .pipe(map(response => JSON.parse(JSON.stringify(response))));
+    .pipe(
+      map(response => JSON.parse(JSON.stringify(response))),
+      catchError(error => {
+        console.log(error);
+        return of(<Response>{success: false, message: "Server error"});
+    }));
   }
 
   removeEvent(event: any) {
     return this.http.post(this.domain + "deleteEvent", event, this.headers())
-    .pipe(map(response => JSON.parse(JSON.stringify(response))));
+    .pipe(
+      map(response => JSON.parse(JSON.stringify(response))),
+      catchError(error => {
+        console.log(error);
+        return of(<Response>{success: false, message: "Server error"});
+    }));
   }
 
   addReminder(reminder: any) {
     return this.http.post(this.domain + "addReminder", reminder, this.headers())
-    .pipe(map(response => JSON.parse(JSON.stringify(response))));
+    .pipe(
+      map(response => JSON.parse(JSON.stringify(response))),
+      catchError(error => {
+        console.log(error);
+        return of(<Response>{success: false, message: "Server error"});
+    }));
   }
+}
+
+
+export interface Response {
+  success: boolean
+  message: string
 }
