@@ -1,6 +1,9 @@
 # ChaosCampGo Project
 
 This is a project for the ChaosCamp Golang Course.\
+The project represents an online scheduler for all kinds of people that have the same schedule for a long period of time.\
+To use it you need to register and then enter what kind of events you have on which weekday. There is also a possibility to add a reminder for an event some time before it starts and receive an email saying how much time remains. <br/>
+
 There is a client side and a server side to it. <br/>
 
 In order to run the server, you need to enter the server folder and to create an "app.env" file with the following structure:\
