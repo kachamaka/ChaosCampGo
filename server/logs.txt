@@ -1,0 +1,22 @@
+2023/02/15 10:16:14 method not allowed
+2023/02/15 10:16:15 9JbQi751WkxVStyLhQxLOA2YExjYL4MK
+2023/02/15 10:16:15 middleware auth err:  token contains an invalid number of segments
+2023/02/15 10:16:35 middleware auth err:  token contains an invalid number of segments
+2023/02/15 10:16:35 middleware auth err:  token contains an invalid number of segments
+2023/02/15 10:16:41 middleware auth err:  token contains an invalid number of segments
+2023/02/15 10:16:42 reminder deleted successfully
+2023/02/15 10:16:42 email sent
+2023/02/15 10:17:36 middleware auth err:  token contains an invalid number of segments
+2023/02/15 10:17:36 middleware auth err:  token contains an invalid number of segments
+2023/02/15 10:17:41 middleware auth err:  token contains an invalid number of segments
+2023/02/15 10:17:41 middleware auth err:  token contains an invalid number of segments
+2023/02/15 10:17:46 middleware auth err:  token contains an invalid number of segments
+2023/02/15 10:17:46 reminder deleted successfully
+2023/02/15 10:17:46 email sent
+2023/02/15 10:18:00 middleware auth err:  token contains an invalid number of segments
+2023/02/15 10:18:00 middleware auth err:  token contains an invalid number of segments
+2023/02/15 10:18:06 middleware auth err:  token contains an invalid number of segments
+2023/02/15 10:18:06 reminder deleted successfully
+2023/02/15 10:18:06 email sent
+2023/02/15 10:18:16 middleware auth err:  token contains an invalid number of segments
+2023/02/15 10:18:16 middleware auth err:  token contains an invalid number of segments

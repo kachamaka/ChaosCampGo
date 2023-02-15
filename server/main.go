@@ -21,6 +21,12 @@ func init() {
 }
 
 func main() {
+	// Load config
+	config, err := config.LoadConfig(".")
+	if err != nil {
+		log.Fatal("load config error:", err)
+	}
+
 	flag.Parse()
 
 	// Configure logger
@@ -30,15 +36,10 @@ func main() {
 			log.Fatal("error creating log file:", err)
 		}
 		log.SetOutput(file)
+		fmt.Println("Logging in logs.txt")
 		defer file.Close()
 	} else {
 		log.SetOutput(io.Discard)
-	}
-
-	// Load config
-	config, err := config.LoadConfig(".")
-	if err != nil {
-		log.Fatal("load config error:", err)
 	}
 
 	database.Get().Connect(config.DatabaseAddress, config.DatabaseName)
