@@ -10,10 +10,10 @@ In order to run the server, you need to enter the server folder and to create an
 `TOKEN_SECRET = "..."`\
 `SENDGRID_API_KEY = "..."` <br/>
 
-HTTP_ADDRESS - the address on which the server will be running, eg. "0.0.0.0:8888"\
-DB_ADDRESS - the address the database is running on, eg. "mongodb://localhost:27017"\
-DB_NAME - the name of the database\
-TOKEN_SECRET - secret for generating JWTs, any string will work\
+HTTP_ADDRESS - the address on which the server will be running, eg. `0.0.0.0:8888`\
+DB_ADDRESS - the address the database is running on, eg. `mongodb://localhost:27017`\
+DB_NAME - the name of the database, eg. `testDB`\
+TOKEN_SECRET - secret for generating JWTs, any string will work, eg. `2sdGzJ6rKkyZjPU04SWEqEK4Uwho8NDp`\
 SENDGRID_API_KEY - an API key generated from the email sending third-party app Sendgrid <br/>
 
 After configuring this, you can run the server with `go run main.go` but you can specify if you want a logger with the `-log` flag as follows: `go run main.go -log="."`. This specifies that the path where the logger will be generated will be the current directory and the name of the file will be "logs.txt". You can also the "chaosgo.exe" file. <br/>
